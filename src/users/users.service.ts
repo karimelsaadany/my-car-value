@@ -33,7 +33,10 @@ export class UsersService {
     return this.usersRepository.save(user)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) return
+
+    return this.usersRepository.remove(user)
   }
 }

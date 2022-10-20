@@ -11,7 +11,7 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     const user = await this.usersService.create(createUserDto);
-    if (!user) throw new BadRequestException('user cannot be created');
+    if (!user) throw new BadRequestException('User cannot be created');
     return user;
   }
 
@@ -38,7 +38,9 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: number): Promise<User> {
+    const user = await this.usersService.remove(id);
+    if (!user) throw new NotFoundException('User does not exist');
+    return user;
   }
 }
