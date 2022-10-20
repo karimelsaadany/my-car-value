@@ -24,12 +24,17 @@ export class UsersController {
   async findOne(@Param('id') id: number): Promise<User> {
     const user = await this.usersService.findOne(id);
     if (!user) throw new NotFoundException('User does not exist');
-    return user
+    return user;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateUserDto: UpdateUserDto
+  ): Promise<User> {
+    const user = await this.usersService.update(id, updateUserDto);
+    if (!user) throw new NotFoundException('User does not exist');
+    return user;
   }
 
   @Delete(':id')

@@ -25,8 +25,12 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) return
+
+    Object.assign(user, updateUserDto)
+    return this.usersRepository.save(user)
   }
 
   remove(id: number) {
