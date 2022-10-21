@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { timeStamp } from 'console';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -12,9 +11,12 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const userExists = await this.findOneByEmail(createUserDto.email);
+    if (userExists) return;
+
     const user = this.usersRepository.create(createUserDto);
-    return this.usersRepository.save(user)
+    return this.usersRepository.save(user);
   }
 
   findAll(): Promise<User[]> {
@@ -23,6 +25,10 @@ export class UsersService {
 
   findOne(id: number): Promise<User> {
     return this.usersRepository.findOneBy({ id });
+  }
+
+  findOneByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOneBy({ email })
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

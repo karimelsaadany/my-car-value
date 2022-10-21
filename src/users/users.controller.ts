@@ -14,7 +14,7 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     const user = await this.usersService.create(createUserDto);
-    if (!user) throw new BadRequestException('User cannot be created');
+    if (!user) throw new BadRequestException('User already exists');
     return user;
   }
 
