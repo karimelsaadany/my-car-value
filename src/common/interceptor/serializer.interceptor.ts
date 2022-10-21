@@ -7,7 +7,7 @@ interface ClassConstructor {
 }
 
 export function Serialize(dto: ClassConstructor) {
-  return UseInterceptors(new SerializerInterceptor(dto))
+  return UseInterceptors(new SerializerInterceptor(dto));
 }
 
 class SerializerInterceptor implements NestInterceptor {
@@ -16,6 +16,6 @@ class SerializerInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((data: any) => plainToInstance(this.dto, data))
-    )
+    );
   }
 }

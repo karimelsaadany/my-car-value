@@ -5,5 +5,6 @@ export class UserDto {
   email: string;
   @Exclude()
   password: string;
+  @Exclude()
   refreshToken: string;
 }

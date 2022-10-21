@@ -16,6 +16,7 @@ export class UsersService {
     if (userExists) return;
 
     const user = this.usersRepository.create(createUserDto);
+
     return this.usersRepository.save(user);
   }
 
@@ -28,21 +29,27 @@ export class UsersService {
   }
 
   findOneByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOneBy({ email })
+    return this.usersRepository.findOneBy({ email });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
-    if (!user) return
+    if (!user) return;
 
-    Object.assign(user, updateUserDto)
-    return this.usersRepository.save(user)
+    Object.assign(user, updateUserDto);
+
+    return this.usersRepository.save(user);
   }
 
   async remove(id: number): Promise<User> {
     const user = await this.usersRepository.findOneBy({ id });
-    if (!user) return
+    if (!user) return;
+    
+    await this.usersRepository.remove(user);
 
-    return this.usersRepository.remove(user)
+    return {
+      ...user,
+      id
+    };
   }
 }
