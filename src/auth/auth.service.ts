@@ -18,8 +18,7 @@ export class AuthService {
   async signUp(signUpAuthDto: SignUpAuthDto): Promise<AuthDto> {
     const { email, password } = signUpAuthDto;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await this.usersService.create({email, password: hashedPassword});
+    const user = await this.usersService.create({ email, password });
     if (!user) return;
 
     const tokens = await this.getTokens(user.id, email);
@@ -41,7 +40,7 @@ export class AuthService {
     if (!passwordMatch) return;
 
     const tokens = await this.getTokens(user.id, email);
-    const updatedUser = await this.usersService.update(user.id, { refreshToken: tokens.refreshToken });
+    const updatedUser = await this.updateRefreshToken(user.id, tokens.refreshToken);
 
     return {
       accessToken: tokens.accessToken,
