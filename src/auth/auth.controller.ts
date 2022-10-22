@@ -4,14 +4,16 @@ import { AuthService } from './auth.service';
 import { SignUpAuthDto } from './dto/signup-auth.dto';
 import { AuthDto } from './dto/auth.dto';
 import { SignInAuthDto } from './dto/signin-auth.dto';
-import { AccessTokenGuard, RefreshTokenGuard } from 'src/common/guard/index';
+import { RefreshTokenGuard } from 'src/common/guard/index';
 import { GetCurrentUser } from 'src/common/decorator/get-current-user.decorator';
+import { Public } from 'src/common/decorator/public.decorator';
 
 @Controller('auth')
 @Serialize(AuthDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('local/signup')
   async signUp(@Body() authDto: SignUpAuthDto): Promise<AuthDto> {
     const data = await this.authService.signUp(authDto);
@@ -19,6 +21,7 @@ export class AuthController {
     return data;
   }
 
+  @Public()
   @Post('local/signin')
   async signIn(@Body() authDto: SignInAuthDto): Promise<AuthDto> {
     const data = await this.authService.signIn(authDto);
@@ -26,7 +29,6 @@ export class AuthController {
     return data;
   }
 
-  @UseGuards(AccessTokenGuard)
   @Post('logout')
   async logout(
     @GetCurrentUser() userData: any
@@ -38,15 +40,16 @@ export class AuthController {
     return data;
   }
 
+  @Public()
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
   async refresh(
     @GetCurrentUser() userData: any
   ): Promise<AuthDto> {
-    const { sub: userId, refreshToken } = userData
-    const data = await this.authService.refresh(userId, refreshToken)
-    if (!data) throw new UnauthorizedException()
+    const { sub: userId, refreshToken } = userData;
+    const data = await this.authService.refresh(userId, refreshToken);
+    if (!data) throw new UnauthorizedException();
 
-    return data
+    return data;
   }
 }
