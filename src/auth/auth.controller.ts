@@ -19,6 +19,7 @@ export class AuthController {
   async signUp(@Body() authDto: SignUpAuthDto): Promise<AuthDto> {
     const data = await this.authService.signUp(authDto);
     if (!data) throw new BadRequestException('User already exists');
+
     return data;
   }
 
@@ -28,6 +29,7 @@ export class AuthController {
   async signIn(@Body() authDto: SignInAuthDto): Promise<AuthDto> {
     const data = await this.authService.signIn(authDto);
     if (!data) throw new UnauthorizedException('Invalide Email or Password');
+
     return data;
   }
 

@@ -62,7 +62,7 @@ export class AuthService {
 
   async refresh(userId: number, refreshToken: string): Promise<AuthDto> {
     const user = await this.usersService.findOne(userId);
-    if (!user) return;
+    if (!user || !user.refreshToken) return;
 
     const refreshTokenMatch = bcrypt.compare(refreshToken, user.refreshToken);
     if (!refreshTokenMatch) return
