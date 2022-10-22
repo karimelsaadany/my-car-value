@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, NotFoundException, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +14,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     const user = await this.usersService.create(createUserDto);
     if (!user) throw new BadRequestException('User already exists');
@@ -22,19 +23,22 @@ export class UsersController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
-
+  
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: number): Promise<User> {
     const user = await this.usersService.findOne(id);
     if (!user) throw new NotFoundException('User does not exist');
-
+    
     return user;
   }
-
+  
   @Patch(':id')
+  @HttpCode(HttpStatus.CREATED)
   async update(
     @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto
@@ -46,6 +50,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: number): Promise<User> {
     const user = await this.usersService.remove(id);
     if (!user) throw new NotFoundException('User does not exist');

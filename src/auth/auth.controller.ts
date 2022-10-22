@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, NotFoundException, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, NotFoundException, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Serialize } from 'src/common/interceptor/serializer.interceptor';
 import { AuthService } from './auth.service';
 import { SignUpAuthDto } from './dto/signup-auth.dto';
@@ -15,6 +15,7 @@ export class AuthController {
 
   @Public()
   @Post('local/signup')
+  @HttpCode(HttpStatus.CREATED)
   async signUp(@Body() authDto: SignUpAuthDto): Promise<AuthDto> {
     const data = await this.authService.signUp(authDto);
     if (!data) throw new BadRequestException('User already exists');
@@ -23,6 +24,7 @@ export class AuthController {
 
   @Public()
   @Post('local/signin')
+  @HttpCode(HttpStatus.OK)
   async signIn(@Body() authDto: SignInAuthDto): Promise<AuthDto> {
     const data = await this.authService.signIn(authDto);
     if (!data) throw new UnauthorizedException('Invalide Email or Password');
@@ -30,6 +32,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   async logout(
     @GetCurrentUser() userData: any
   ): Promise<AuthDto> {
@@ -43,6 +46,7 @@ export class AuthController {
   @Public()
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   async refresh(
     @GetCurrentUser() userData: any
   ): Promise<AuthDto> {
