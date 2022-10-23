@@ -1,12 +1,9 @@
 import { BadRequestException, Body, Controller, HttpCode, HttpStatus, NotFoundException, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { Serialize } from 'src/common/interceptor/serializer.interceptor';
+import { Serialize } from '../common/interceptor';
 import { AuthService } from './auth.service';
-import { SignUpAuthDto } from './dto/signup-auth.dto';
-import { AuthDto } from './dto/auth.dto';
-import { SignInAuthDto } from './dto/signin-auth.dto';
-import { RefreshTokenGuard } from 'src/common/guard/index';
-import { GetCurrentUser } from 'src/common/decorator/get-current-user.decorator';
-import { Public } from 'src/common/decorator/public.decorator';
+import { AuthDto, SignInAuthDto, SignUpAuthDto } from './dto';
+import { RefreshTokenGuard } from '../common/guard';
+import { GetCurrentUser, Public } from '../common/decorator';
 
 @Controller('auth')
 @Serialize(AuthDto)

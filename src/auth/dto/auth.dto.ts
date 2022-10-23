@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { UserDto } from "src/users/dto/user.dto";
+import { UserDto } from "../../users/dto";
 
 export class AuthDto {
   accessToken: string;
